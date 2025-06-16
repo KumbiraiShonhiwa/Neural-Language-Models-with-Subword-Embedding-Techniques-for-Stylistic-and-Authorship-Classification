@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Language Models with Subword Embedding Techniques for Stylistic and Authorship Classification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #000008 0%, #764ba2 100%);
+            color: white;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide {
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-align: center;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .slide h2 {
+            font-size: 2em;
+            margin-bottom: 25px;
+            color: #fff;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .slide h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #f0f0f0;
+        }
+
+        .slide p, .slide li {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #f0f0f0;
+        }
+
+        .slide ul {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        .slide li {
+            margin-bottom: 10px;
+        }
+
+        .authors {
+            text-align: center;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            color: #e0e0e0;
+        }
+
+        .date {
+            text-align: center;
+            font-size: 1.1em;
+            color: #d0d0d0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.2);
+            font-weight: bold;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1em;
+            z-index: 1000;
+        }
+
+        .highlight {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #fff;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .formula {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .key-findings {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                width: 95%;
+                padding: 20px;
+                height: 90vh;
+            }
+            
+            .slide h1 {
+                font-size: 2em;
+            }
+            
+            .slide h2 {
+                font-size: 1.5em;
+            }
+            
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1>Neural Language Models with Subword Embedding Techniques</h1>
+            <h2 style="text-align: center; border: none; margin-top: 40px;">Stylistic and Authorship Attribution</h2>
+            <div class="authors">
+                <p><strong>Kumbirai Shonhiwa, Thando Dlamini, Given Chauke</strong></p>
+                <p>COS 760 Project Report</p>
+            </div>
+            <div class="date">
+                <p>June 17, 2025</p>
+            </div>
+            <div class="highlight" style="margin-top: 60px;">
+                <p style="text-align: center; font-size: 1.2em;">
+                    Neural Language Models with Subword Embedding Techniques for Stylistic and Authorship Classification
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Problem Statement -->
+        <div class="slide">
+            <h2>Problem Statement & Motivation</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Traditional Challenges</h3>
+                    <ul>
+                        <li>Bag-of-Words and TF-IDF struggle with out-of-vocabulary words</li>
+                        <li>Limited handling of morphologically complex languages</li>
+                        <li>Poor performance on subtle stylistic variations</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Our Solution</h3>
+                    <ul>
+                        <li>Subword tokenization (BPE, SentencePiece, WordPiece)</li>
+                        <li>Enhanced handling of morphological diversity</li>
+                        <li>Improved low-resource language support</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Background & Related Work -->
+        <div class="slide">
+            <h2>Background & Related Work</h2>
+            <h3>Subword Embedding Techniques</h3>
+            <ul>
+                <li><strong>Transformer Models:</strong> BERT, GPT, T5 demonstrate improved syntax/semantic understanding</li>
+                <li><strong>Balanced Approach:</strong> More detail than word-level, better organized than character-level</li>
+                <li><strong>Author-specific Traits:</strong> Captures spelling patterns, punctuation habits, morpheme preferences</li>
+            </ul>
+
+            <h3>Authorship Attribution Challenges</h3>
+            <div class="two-column">
+                <div>
+                    <h4>Social Media Constraints</h4>
+                    <ul>
+                        <li>Short text length (280 characters)</li>
+                        <li>Informal language & slang</li>
+                        <li>Multilingual content</li>
+                        <li>Evolving writing styles</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Technical Approach</h4>
+                    <ul>
+                        <li>Transfer learning with mBERT/XLM-R</li>
+                        <li>Pre-trained multilingual models</li>
+                        <li>Fine-tuning for specific tasks</li>
+                        <li>Leveraging existing language knowledge</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Tokenization Methods -->
+        <div class="slide">
+            <h2>Subword Tokenization Methods</h2>
+            <div class="key-findings">
+                <h3>Three Core Approaches</h3>
+                <div style="margin-top: 30px;">
+                    <h4>Byte-Pair Encoding (BPE)</h4>
+                    <p>Merges most frequent character pairs iteratively. Effective for low-resource languages and complex words with limited data.</p>
+                    
+                    <h4>SentencePiece</h4>
+                    <p>Supports BPE and Unigram models without relying on spaces. Excellent for languages without consistent word boundaries.</p>
+                    
+                    <h4>WordPiece</h4>
+                    <p>Finds longest matching subwords from vocabulary. Handles morphologically rich words and out-of-vocabulary tokens gracefully.</p>
+                </div>
+            </div>
+            <div class="highlight">
+                <p><strong>Key Advantage:</strong> These methods enable better generalization to unseen words by breaking them into meaningful sub-components.</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Methodology - Data -->
+        <div class="slide">
+            <h2>Dataset & Preprocessing</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Dataset Statistics</h3>
+                    <table>
+                        <tr><th>Metric</th><th>Value</th></tr>
+                        <tr><td>Total tweets</td><td>20,000</td></tr>
+                        <tr><td>Number of authors</td><td>100</td></tr>
+                        <tr><td>Tweets per author</td><td>200</td></tr>
+                        <tr><td>Training set</td><td>14,000 (70%)</td></tr>
+                        <tr><td>Validation set</td><td>3,000 (15%)</td></tr>
+                        <tr><td>Test set</td><td>3,000 (15%)</td></tr>
+                    </table>
+                </div>
+                <div>
+                    <h3>Preprocessing Pipeline</h3>
+                    <ul>
+                        <li>URLs → [URL] tokens</li>
+                        <li>Mentions → [USER] tokens</li>
+                        <li>Hashtags → [HASHTAG] format</li>
+                        <li>Text normalization & encoding standardization</li>
+                        <li>Character n-grams (2,3,4-grams) extraction</li>
+                        <li>Maximum sequence length: 128 tokens</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="highlight">
+                <p><strong>Quality Control:</strong> Only verified users with 50+ tweets, filtered for spam and automated content</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Model Architecture -->
+        <div class="slide">
+            <h2>Model Architecture & Training</h2>
+            <h3>Model Configurations</h3>
+            <table>
+                <tr><th>Tokenization</th><th>Model</th><th>Parameters</th></tr>
+                <tr><td>BPE</td><td>XLM-RoBERTa Base</td><td>278M</td></tr>
+                <tr><td>WordPiece</td><td>mBERT</td><td>177M</td></tr>
+                <tr><td>SentencePiece</td><td>XLM-RoBERTa Large</td><td>559M</td></tr>
+            </table>
+
+            <div class="two-column">
+                <div>
+                    <h3>Training Configuration</h3>
+                    <ul>
+                        <li>Learning rate: 2×10⁻⁵</li>
+                        <li>Batch size: 16 (with gradient accumulation)</li>
+                        <li>Max epochs: 20</li>
+                        <li>Warmup steps: 500</li>
+                        <li>Weight decay: 0.01</li>
+                        <li>Early stopping on validation F1</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Optimization Strategy</h3>
+                    <ul>
+                        <li>Linear learning rate decay</li>
+                        <li>Evaluation every 100 steps</li>
+                        <li>Weights & Biases monitoring</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Evaluation Metrics -->
+        <div class="slide">
+            <h2>Evaluation Framework</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Core Metrics</h3>
+                    <div class="formula">
+                        <strong>Accuracy:</strong><br>
+                        Accuracy = Correct Predictions / Total Predictions
+                    </div>
+                    <div class="formula">
+                        <strong>F1 Score (Weighted):</strong><br>
+                        F1 = 2 × (Precision × Recall) / (Precision + Recall)
+                    </div>
+                    <div class="formula">
+                        <strong>Top-K Accuracy:</strong><br>
+                        Measures if true author is in top-k predictions
+                    </div>
+                </div>
+                <div>
+                    <h2>Statistical Analysis</h2>
+                    <ul>
+                        <li><strong>Performance Metrics:</strong> Test Accuracy, F1-Score, Top-5 Accuracy, Precision, Recall</li>
+                        
+                        <li><strong>Architecture Comparison:</strong> xlm-roberta-base, bert-base-multilingual-cased, xlm-roberta-large</li>
+                        
+                        <li><strong>Tokenization Methods:</strong> BPE, WordPiece, SentencePiece with error rate analysis</li>
+                        
+                        <li><strong>Baseline Comparisons:</strong> Random, Majority Class performance benchmarks</li>
+                        
+                        <li><strong>Author Bias Analysis:</strong> Equal distribution analysis across 10 authors per method</li>
+                        
+                        <li><strong>Performance Heatmap:</strong> Comprehensive metric correlation analysis across all tokenization approaches</li>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="highlight">
+                <p><strong>Goal:</strong> Ensure models are both accurate in controlled settings and adaptable to diverse real-world linguistic situations.</p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Results -->
+        <div class="slide">
+            <h2>Experimental Results</h2>
+            <h3>Model Performance Comparison</h3>
+            <table>
+                <tr><th>Method</th><th>Accuracy</th><th>F1 Score</th><th>Top-5 Accuracy</th><th>Error Rate</th></tr>
+                <tr><td><strong>SentencePiece</strong></td><td><strong>63.3%</strong></td><td><strong>63.5%</strong></td><td><strong>82.6%</strong></td><td><strong>36.7%</strong></td></tr>
+                <tr><td>BPE</td><td>61.6%</td><td>61.5%</td><td>80.1%</td><td>38.4%</td></tr>
+                <tr><td>WordPiece</td><td>58.9%</td><td>59.2%</td><td>77.7%</td><td>41.1%</td></tr>
+            </table>
+
+            <div class="key-findings">
+                <h3>Key Findings</h3>
+                <ul>
+                    <li><strong>SentencePiece leads</strong> with 4.4% improvement over WordPiece</li>
+                    <li><strong>XLM-RoBERTa consistently outperforms</strong> BERT across tokenization methods</li>
+                    <li><strong>Architecture matters more</strong> than tokenization method</li>
+                    <li><strong>Trade-off observed</strong> between model size, speed, and performance</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 9: Error Analysis -->
+        <div class="slide">
+            <h2>Error Analysis & Insights</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Systematic Bias: Author 0</h3>
+                    <ul>
+                        <li><strong>23-25%</strong> of all errors involve misclassification as Author 0</li>
+                        <li>Consistent across all tokenization methods</li>
+                        <li>Suggests data imbalance or generic writing style</li>
+                    </ul>
+
+                    <h3>Top Confusion Patterns</h3>
+                    <ul>
+                        <li>Author 2 → Author 0: 23 instances</li>
+                        <li>Author 5 → Author 0: 22 instances</li>
+                        <li>Author 1 → Author 0: 20 instances</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Performance Insights</h3>
+                    <div class="highlight">
+                        <h4>Why SentencePiece Wins?</h4>
+                        <ul>
+                            <li>Better handling of Twitter's informal language</li>
+                            <li>Superior morphological variation processing</li>
+                            <li>Unigram model captures creative spelling</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Limitations & Ethical Considerations -->
+        <div class="slide">
+            <h2>Limitations & Ethical Considerations</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Technical Limitations</h3>
+                    <ul>
+                        <li>128-token sequence limit may miss context</li>
+                        <li>Untested on other social media platforms</li>
+                        <li>High computational requirements</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Ethical Concerns</h3>
+                    <ul>
+                        <li><strong>Privacy threats:</strong> Anonymous author identification</li>
+                        <li><strong>Surveillance risks:</strong> Potential for oppressive monitoring</li>
+                        <li><strong>Misuse potential:</strong> Harassment enablement</li>
+                    </ul>
+                </div>
+            </div>
+            </div>
+        </div>
+<!-- 
+        Slide 11: Future Work & Conclusions
+        <div class="slide">
+            <h2>Future Work & Conclusions</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Future Directions</h3>
+                    <ul>
+                        <li>Extended context window testing</li>
+                        <li>Human evaluation studies</li>
+                        <li>Bias mitigation strategies</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Key Contributions</h3>
+                    <ul>
+                        <li>Systematic comparison of tokenization methods</li>
+                        <li>Comprehensive evaluation framework</li>
+                        <li>Ethical considerations analysis</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="key-findings">
+                <h3>Main Conclusions</h3>
+                <ul>
+                    <li><strong>SentencePiece tokenization</strong> shows superior performance for social media authorship attribution</li>
+                    <li><strong>Model architecture</strong> has greater impact than tokenization method choice</li>
+                    <li><strong>Ethical deployment</strong> requires careful consideration of privacy and bias implications</li>
+                </ul>
+            </div>
+        </div> -->
+
+                <!-- Slide 11: Author Bias & Confusion Analysis -->
+        <div class="slide">
+            <h2>Author Bias & Confusion Analysis</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Systematic Author 0 Bias</h3>
+                    <div class="confusion-insight">
+                        <ul>
+                            <li><strong>Consistent across all methods:</strong> 10 authors equally distributed</li>
+                            <li><strong>Heavy misclassification bias</strong> toward Author 0</li>
+                            <li><strong>All confusion matrices show</strong> Author 0 as most confused class</li>
+                        </ul>
+                    </div>
+
+                    <h3>Confusion Matrix Insights</h3>
+                    <ul>
+                        <li><strong>BPE Model:</strong> Strong diagonal but Author 0 column bias</li>
+                        <li><strong>SentencePiece:</strong> Better balanced predictions</li>
+                        <li><strong>WordPiece:</strong> Most scattered predictions</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="key-findings">
+                        <h3>Critical Findings</h3>
+                        <ul>
+                            <li><strong>Author 0 acts as default prediction</strong> across all tokenizers</li>
+                            <li><strong>SentencePiece shows better class balance</strong> in confusion matrices</li>
+                            <li><strong>Data imbalance or generic writing style</strong> causes systematic bias</li>
+                            <li><strong>Future work needed:</strong> Bias mitigation strategies</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Performance Heatmap Analysis -->
+        <div class="slide">
+            <h2>Performance Correlation Analysis</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Metric Correlations</h3>
+                    <ul>
+                        <li><strong>High correlation</strong> between Accuracy, F1, Precision, and Recall</li>
+                        <li><strong>Top-5 Accuracy consistently higher</strong> across all methods</li>
+                        <li><strong>SentencePiece dominates</strong> in heatmap intensity</li>
+                    </ul>
+
+                    <h3>Statistical Significance</h3>
+                    <ul>
+                        <li><strong>Consistent ranking:</strong> SentencePiece > BPE > WordPiece</li>
+                        <li><strong>Performance gaps</strong> statistically meaningful</li>
+                        <li><strong>Architecture impact</strong> more significant than tokenization</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="highlight">
+                        <h4>Why SentencePiece Wins?</h4>
+                        <ul>
+                            <li><strong>Better subword segmentation</strong> for informal text</li>
+                            <li><strong>Unigram language model</strong> handles creative spelling</li>
+                            <li><strong>Superior morphological variation</strong> processing</li>
+                            <li><strong>Robust to Twitter's linguistic diversity</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Detailed Confusion Matrix Insights -->
+        <div class="slide">
+            <h2>Detailed Confusion Matrix Analysis</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Cross-Model Confusion Patterns</h3>
+                    <ul>
+                        <li><strong>BPE Model:</strong> Clean diagonal with Author 0 bias (19-21 misclassifications)</li>
+                        <li><strong>SentencePiece:</strong> Best balanced performance (8-23 range)</li>
+                        <li><strong>WordPiece:</strong> Most scattered, poorest class separation</li>
+                    </ul>
+
+                    <h3>Common Misclassification Patterns</h3>
+                    <ul>
+                        <li><strong>Authors 1, 2, 5:</strong> Frequently misclassified as Author 0</li>
+                        <li><strong>Authors 8, 9, 10:</strong> Better class separation</li>
+                        <li><strong>Authors 16-20:</strong> Consistent performance across models</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="confusion-insight">
+                        <h4>Confusion Matrix Takeaways</h4>
+                        <ul>
+                            <li><strong>SentencePiece confusion matrix</strong> shows best class balance</li>
+                            <li><strong>Systematic Author 0 bias</strong> requires investigation</li>
+                            <li><strong>Model architecture</strong> impacts confusion patterns</li>
+                            <li><strong>Some authors more distinguishable</strong> than others</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Slide 12: Thank You -->
+        <div class="slide">
+            <h1>Thank You</h1>
+            <div style="text-align: center; margin-top: 100px;">
+                <h2 style="border: none;">Questions & Discussion</h2>
+                <div class="authors" style="margin-top: 60px;">
+                    <p><strong>Kumbirai Shonhiwa</strong></p>
+                    <p><strong>Thando Dlamini</strong></p>
+                    <p><strong>Given Chauke</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">12</span>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prev-btn" onclick="previousSlide()">← Previous</button>
+        <button class="nav-btn" id="next-btn" onclick="nextSlide()">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+            
+            // Update navigation buttons
+            document.getElementById('prev-btn').disabled = currentSlide === 0;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight' || event.key === ' ') {
+                nextSlide();
+            } else if (event.key === 'ArrowLeft') {
+                previousSlide();
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>

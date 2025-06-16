@@ -1,0 +1,28 @@
+{
+  "tokenization_method": "wordpiece",
+  "model_name": "bert-base-multilingual-cased",
+  "train_results": {
+    "train_runtime": 1216.5688,
+    "train_samples_per_second": 230.156,
+    "train_steps_per_second": 3.6,
+    "total_flos": 1.1363758469480448e+16,
+    "train_loss": 1.3790141605447839,
+    "epoch": 12.32876712328767
+  },
+  "test_results": {
+    "eval_loss": 2.0629160404205322,
+    "eval_accuracy": 0.5893333333333334,
+    "eval_f1": 0.5920670427710237,
+    "eval_precision": 0.6081853165223922,
+    "eval_recall": 0.5893333333333334,
+    "eval_top_5_accuracy": 0.7766666666666666,
+    "eval_runtime": 5.2558,
+    "eval_samples_per_second": 570.8,
+    "eval_steps_per_second": 17.885,
+    "epoch": 12.32876712328767
+  },
+  "num_authors": 100,
+  "training_samples": 14000,
+  "validation_samples": 3000,
+  "test_samples": 3000
+}

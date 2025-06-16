@@ -1,0 +1,28 @@
+{
+  "tokenization_method": "sentencepiece",
+  "model_name": "xlm-roberta-large",
+  "train_results": {
+    "train_runtime": 3715.2053,
+    "train_samples_per_second": 75.366,
+    "train_steps_per_second": 2.358,
+    "total_flos": 2.6076615761903616e+16,
+    "train_loss": 1.5740715214865548,
+    "epoch": 7.992
+  },
+  "test_results": {
+    "eval_loss": 1.7185157537460327,
+    "eval_accuracy": 0.6333333333333333,
+    "eval_f1": 0.6345144632418024,
+    "eval_precision": 0.663163906197452,
+    "eval_recall": 0.6333333333333333,
+    "eval_top_5_accuracy": 0.8263333333333334,
+    "eval_runtime": 18.5047,
+    "eval_samples_per_second": 162.121,
+    "eval_steps_per_second": 20.265,
+    "epoch": 7.992
+  },
+  "num_authors": 100,
+  "training_samples": 14000,
+  "validation_samples": 3000,
+  "test_samples": 3000
+}
