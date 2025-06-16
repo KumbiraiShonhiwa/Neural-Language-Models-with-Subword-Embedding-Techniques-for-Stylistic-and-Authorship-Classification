@@ -7,7 +7,7 @@
 
 ## Project Overview
 
-This project explores the use of **neural language models** combined with **subword embedding techniques** to improve **stylistic classification** and **authorship attribution**, particularly in **African languages**. By leveraging state-of-the-art transformer models and advanced tokenization strategies, we aim to overcome the limitations of traditional NLP methods in low-resource, morphologically rich language contexts.
+This project explores the use of **neural language models** combined with **subword embedding techniques** to improve **stylistic classification** and **authorship attribution**. By leveraging state-of-the-art transformer models and advanced tokenization strategies.
 
 ---
 
