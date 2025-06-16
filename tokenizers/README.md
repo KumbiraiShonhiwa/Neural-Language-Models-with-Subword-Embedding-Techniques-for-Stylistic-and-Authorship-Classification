@@ -5,12 +5,6 @@ This dataset has been preprocessed for authorship attribution using three differ
 ## Dataset Overview
 
 - **Source**: Twitter data from multiple users
-- **Total tweets**: {len(balanced_df)}
-- **Number of authors**: {num_authors}
-- **Tweets per author**: Min: {min_count}, Max: {max_count}, Average: {avg_count:.2f}
-- **Train set**: {len(train_df)} tweets
-- **Validation set**: {len(val_df)} tweets
-- **Test set**: {len(test_df)} tweets
 
 ## Preprocessing Steps
 
@@ -33,8 +27,6 @@ This dataset has been preprocessed for authorship attribution using three differ
      - SentencePiece using XLM-RoBERTa Large
 
 4. **Stylometric Analysis**:
-   - Extracted character n-grams (2-grams, 3-grams, and 4-grams)
-   - Identified distinctive n-grams for each author
    - Analyzed common patterns across the dataset
 
 ## File Descriptions
