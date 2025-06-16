@@ -24,6 +24,9 @@ Subword-based approaches like **Byte-Pair Encoding (BPE)**, **WordPiece**, and *
 
 ## Dataset
 
+The final dataset maintains precise balance with exactly 200 tweets per author, distributed across training (14,000 tweets, 70\%), validation (3,000 tweets, 15\%), and test (3,000 tweets, 15\%) sets using stratified sampling to ensure proportional author
+representation in each split.
+
 ## Methodology
 
 ### Subword Tokenization Techniques
