@@ -18,6 +18,34 @@
             overflow: hidden;
         }
 
+        .three-column-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+            height: 100%;
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+        }
+
+        .matrix-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .matrix-container h3 {
+            margin-bottom: 1rem;
+            text-align: center;
+            border: none;
+            padding: 0;
+            font-size: 1.4rem;
+        }
+
         .presentation-container {
             width: 100vw;
             height: 100vh;
@@ -36,15 +64,18 @@
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 40px;
-            display: none;
+            display: none; /* Hide all slides by default */
             flex-direction: column;
             box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
-            position: relative;
+            position: absolute; /* Position absolutely to prevent stacking */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             overflow-y: auto;
         }
 
         .slide.active {
-            display: flex;
+            display: flex; /* Only show active slide */
         }
 
         .slide h1 {
@@ -398,7 +429,7 @@
                     </div>
                 </div>
                 <div>
-                    <h2>Statistical Analysis</h2>
+                    <h3>Statistical Analysis</h3>
                     <ul>
                         <li><strong>Performance Metrics:</strong> Test Accuracy, F1-Score, Top-5 Accuracy, Precision, Recall</li>
                         
@@ -442,8 +473,105 @@
             </div>
         </div>
 
-        <!-- Slide 9: Error Analysis -->
+        <!-- Slide 11: Performance Charts -->
         <div class="slide">
+            <h2>Comprehensive Analysis</h2>
+            <div>
+                <image src="assets/comprehensive_analysis.png" alt="Performance Dashboard" style="width: 100%; height: auto; border-radius: 8px;">
+            </div>
+            <ul style="text-align: left; margin-top: 20px; color: #ddd;">
+                <li>Accuracy comparison across tokenization methods</li>
+                <li>F1-Score performance metrics</li>
+                <li>Top-5 accuracy visualization</li>
+                <li>Error rate analysis</li>
+                <li>Model architecture comparison</li>
+            </ul>
+            </div>
+        </div>
+
+        <!-- Slide 12: Performance Analysis Results -->
+        <div class="slide">
+            <h2>Performance Analysis Results</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Key Findings</h3>
+                    <ul>
+                        <li><strong>SENTENCEPIECE leads</strong> with highest accuracy (63.3%) and Top-5 accuracy (82.6%)</li>
+                        <li><strong>Model architecture impact:</strong> xlm-roberta-large performs best (63.3% accuracy)</li>
+                        <li><strong>Tokenization comparison:</strong> All methods show similar F1 scores (~59-63%)</li>
+                        <li><strong>Error rates:</strong> SENTENCEPIECE achieves lowest error rate (36.67%)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Performance Insights</h3>
+                    <ul>
+                        <li><strong>Baseline comparison:</strong> All methods significantly outperform random (4.8%) and majority class (19.0%)</li>
+                        <li><strong>Architecture scaling:</strong> Larger models (xlm-roberta-large) show clear benefits</li>
+                        <li><strong>Balanced metrics:</strong> High precision and recall across all tokenization methods</li>
+                        <li><strong>Author bias:</strong> Consistent distribution across all tokenization approaches</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+            
+        <!-- Slide 14: Confusion Matrices -->
+        <div class="slide">
+            <h2>Confusion Matrix Analysis</h2>
+            <div class="three-column-grid">
+                <div class="matrix-container">
+                    <h3>SENTENCEPIECE Model</h3>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: center;">
+                        <p style="color: #ccc;">Confusion Matrix</p>
+                        <image src="assets/sentencepiece_confusion_matrix.png" alt="SentencePiece Confusion Matrix" style="width: 100%; height: auto; border-radius: 8px;">
+                        <p style="font-size: 0.9em; margin-top: 10px;">21x21 author classification matrix showing prediction accuracy patterns</p>
+                    </div>
+                </div>
+                <div class="matrix-container">
+                    <h3>BPE Model</h3>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: center;">
+                        <p style="color: #ccc;">Confusion Matrix</p>
+                        <image src="assets/bpe_confusion_matrix.png" alt="BPE Confusion Matrix" style="width: 100%; height: auto; border-radius: 8px;">
+                        <p style="font-size: 0.9em; margin-top: 10px;">21x21 author classification matrix showing prediction accuracy patterns</p>
+                    </div>
+                </div>
+                <div class="matrix-container">
+                    <h3>WORDPIECE Model</h3>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: center;">
+                        <p style="color: #ccc;">Confusion Matrix</p>
+                        <image src="assets/wordpiece_confusion_matrix.png" alt="BPE Confusion Matrix" style="width: 100%; height: auto; border-radius: 8px;">
+                        <p style="font-size: 0.9em; margin-top: 10px;">21x21 author classification matrix showing prediction accuracy patterns</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Confusion Matrix Insights -->
+        <div class="slide">
+            <h2>Confusion Matrix Insights</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Classification Patterns</h3>
+                    <ul>
+                        <li><strong>Strong diagonal performance:</strong> All models show good true positive rates on main diagonal</li>
+                        <li><strong>SENTENCEPIECE superiority:</strong> Clearest diagonal pattern with fewer off-diagonal errors</li>
+                        <li><strong>Author clustering:</strong> Some authors (0, 1, 2) show higher confusion, suggesting similar writing styles</li>
+                        <li><strong>Consistent misclassifications:</strong> Similar error patterns across all tokenization methods</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Model Comparison</h3>
+                    <ul>
+                        <li><strong>SENTENCEPIECE:</strong> Most concentrated predictions on diagonal, fewer scattered errors</li>
+                        <li><strong>BPE:</strong> Moderate performance with some author-specific confusion clusters</li>
+                        <li><strong>WORDPIECE:</strong> More distributed errors, suggesting less confident predictions</li>
+                        <li><strong>Class balance:</strong> All models handle the 21-author classification reasonably well</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+          <div class="slide">
             <h2>Error Analysis & Insights</h2>
             <div class="two-column">
                 <div>
@@ -496,143 +624,9 @@
                     </ul>
                 </div>
             </div>
-            </div>
         </div>
-<!-- 
-        Slide 11: Future Work & Conclusions
-        <div class="slide">
-            <h2>Future Work & Conclusions</h2>
-            <div class="two-column">
-                <div>
-                    <h3>Future Directions</h3>
-                    <ul>
-                        <li>Extended context window testing</li>
-                        <li>Human evaluation studies</li>
-                        <li>Bias mitigation strategies</li>
-                    </ul>
-                </div>
-                <div>
-                    <h3>Key Contributions</h3>
-                    <ul>
-                        <li>Systematic comparison of tokenization methods</li>
-                        <li>Comprehensive evaluation framework</li>
-                        <li>Ethical considerations analysis</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="key-findings">
-                <h3>Main Conclusions</h3>
-                <ul>
-                    <li><strong>SentencePiece tokenization</strong> shows superior performance for social media authorship attribution</li>
-                    <li><strong>Model architecture</strong> has greater impact than tokenization method choice</li>
-                    <li><strong>Ethical deployment</strong> requires careful consideration of privacy and bias implications</li>
-                </ul>
-            </div>
-        </div> -->
-
-                <!-- Slide 11: Author Bias & Confusion Analysis -->
-        <div class="slide">
-            <h2>Author Bias & Confusion Analysis</h2>
-            <div class="two-column">
-                <div>
-                    <h3>Systematic Author 0 Bias</h3>
-                    <div class="confusion-insight">
-                        <ul>
-                            <li><strong>Consistent across all methods:</strong> 10 authors equally distributed</li>
-                            <li><strong>Heavy misclassification bias</strong> toward Author 0</li>
-                            <li><strong>All confusion matrices show</strong> Author 0 as most confused class</li>
-                        </ul>
-                    </div>
-
-                    <h3>Confusion Matrix Insights</h3>
-                    <ul>
-                        <li><strong>BPE Model:</strong> Strong diagonal but Author 0 column bias</li>
-                        <li><strong>SentencePiece:</strong> Better balanced predictions</li>
-                        <li><strong>WordPiece:</strong> Most scattered predictions</li>
-                    </ul>
-                </div>
-                <div>
-                    <div class="key-findings">
-                        <h3>Critical Findings</h3>
-                        <ul>
-                            <li><strong>Author 0 acts as default prediction</strong> across all tokenizers</li>
-                            <li><strong>SentencePiece shows better class balance</strong> in confusion matrices</li>
-                            <li><strong>Data imbalance or generic writing style</strong> causes systematic bias</li>
-                            <li><strong>Future work needed:</strong> Bias mitigation strategies</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 12: Performance Heatmap Analysis -->
-        <div class="slide">
-            <h2>Performance Correlation Analysis</h2>
-            <div class="two-column">
-                <div>
-                    <h3>Metric Correlations</h3>
-                    <ul>
-                        <li><strong>High correlation</strong> between Accuracy, F1, Precision, and Recall</li>
-                        <li><strong>Top-5 Accuracy consistently higher</strong> across all methods</li>
-                        <li><strong>SentencePiece dominates</strong> in heatmap intensity</li>
-                    </ul>
-
-                    <h3>Statistical Significance</h3>
-                    <ul>
-                        <li><strong>Consistent ranking:</strong> SentencePiece > BPE > WordPiece</li>
-                        <li><strong>Performance gaps</strong> statistically meaningful</li>
-                        <li><strong>Architecture impact</strong> more significant than tokenization</li>
-                    </ul>
-                </div>
-                <div>
-                    <div class="highlight">
-                        <h4>Why SentencePiece Wins?</h4>
-                        <ul>
-                            <li><strong>Better subword segmentation</strong> for informal text</li>
-                            <li><strong>Unigram language model</strong> handles creative spelling</li>
-                            <li><strong>Superior morphological variation</strong> processing</li>
-                            <li><strong>Robust to Twitter's linguistic diversity</strong></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 13: Detailed Confusion Matrix Insights -->
-        <div class="slide">
-            <h2>Detailed Confusion Matrix Analysis</h2>
-            <div class="two-column">
-                <div>
-                    <h3>Cross-Model Confusion Patterns</h3>
-                    <ul>
-                        <li><strong>BPE Model:</strong> Clean diagonal with Author 0 bias (19-21 misclassifications)</li>
-                        <li><strong>SentencePiece:</strong> Best balanced performance (8-23 range)</li>
-                        <li><strong>WordPiece:</strong> Most scattered, poorest class separation</li>
-                    </ul>
-
-                    <h3>Common Misclassification Patterns</h3>
-                    <ul>
-                        <li><strong>Authors 1, 2, 5:</strong> Frequently misclassified as Author 0</li>
-                        <li><strong>Authors 8, 9, 10:</strong> Better class separation</li>
-                        <li><strong>Authors 16-20:</strong> Consistent performance across models</li>
-                    </ul>
-                </div>
-                <div>
-                    <div class="confusion-insight">
-                        <h4>Confusion Matrix Takeaways</h4>
-                        <ul>
-                            <li><strong>SentencePiece confusion matrix</strong> shows best class balance</li>
-                            <li><strong>Systematic Author 0 bias</strong> requires investigation</li>
-                            <li><strong>Model architecture</strong> impacts confusion patterns</li>
-                            <li><strong>Some authors more distinguishable</strong> than others</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Slide 12: Thank You -->
+        
+        <!-- Slide 16: Thank You -->
         <div class="slide">
             <h1>Thank You</h1>
             <div style="text-align: center; margin-top: 100px;">
@@ -647,7 +641,7 @@
     </div>
 
     <div class="slide-counter">
-        <span id="current-slide">1</span> / <span id="total-slides">12</span>
+        <span id="current-slide">1</span> / <span id="total-slides">16</span>
     </div>
 
     <div class="navigation">
