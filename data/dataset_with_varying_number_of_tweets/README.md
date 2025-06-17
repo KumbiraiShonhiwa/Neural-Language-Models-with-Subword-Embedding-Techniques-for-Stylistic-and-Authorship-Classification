@@ -1,4 +1,4 @@
-## Dataset Acknowledgment
+# Dataset Acknowledgment
 
 This project utilizes a curated Twitter dataset intended for authorship attribution research. The dataset consists of 20,000 tweets collected from 100 verified users. It is compiled from the following source files:
 
