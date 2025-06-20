@@ -2,13 +2,66 @@
 
 # Neural Language Models with Subword Embedding Techniques for Stylistic and Authorship Classification
 
-**Authors:** Kumbirai Shonhiwa, Thando Dlamini, Given Chauke  
-**Date:** April 2025
-
 ## Project Overview
 
 This project explores the use of **neural language models** combined with **subword embedding techniques** to improve **stylistic classification** and **authorship attribution**. By leveraging state-of-the-art transformer models and advanced tokenization strategies.
 
+---
+
+## Contents of the Zip File
+Root Directory
+
+README.md - This file, containing project documentation
+requirements.txt - Python package dependencies
+
+* /src/ - Source Code
+
+* /data/ - Data Directory
+
+* /docs/ - Documentation
+
+Contains presentation slides and additional documentation
+
+* /notebooks/ - Jupyter Notebooks
+
+* /results/ - Output Directory
+
+Setup Instructions
+Prerequisites
+
+Python 3.8 or higher
+Google Colab account  or local GPU environment
+Google Drive account for data storage
+
+Installation
+
+1. Google Colab 
+
+Upload the project files to your Google Colab environment
+Install dependencies:
+
+```
+python!pip install -r requirements.txt
+
+```
+
+2. Local Environment
+
+Clone or extract the project files
+Create a virtual environment:
+
+```
+
+bashpython -m venv nlm_env
+source nlm_env/bin/activate  # On Windows: nlm_env\Scripts\activate
+
+```
+
+Install dependencies:
+
+```
+bashpip install -r requirements.txt
+```
 ---
 
 ## Background
