@@ -8,7 +8,7 @@ This project explores the use of **neural language models** combined with **subw
 
 ---
 
-## Contents of the Zip File
+## Contents of the Zip/Repo File
 Root Directory
 
 README.md - This file, containing project documentation
@@ -33,7 +33,7 @@ Python 3.8 or higher
 Google Colab account  or local GPU environment
 Google Drive account for data storage
 
-Installation
+### Installation
 
 1. Google Colab 
 
