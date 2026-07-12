@@ -6,72 +6,7 @@
 
 This project explores the use of **neural language models** combined with **subword embedding techniques** to improve **stylistic classification** and **authorship attribution**. By leveraging state-of-the-art transformer models and advanced tokenization strategies.
 
----
-
-## Contents of the Zip/Repo File
-Root Directory
-
-README.md - This file, containing project documentation
-requirements.txt - Python package dependencies
-
-* /src/ - Source Code
-
-* /data/ - Data Directory
-
-* /docs/ - Documentation
-
-Contains presentation slides and additional documentation
-
-* /notebooks/ - Jupyter Notebooks
-
-* /results/ - Output Directory
-
-Setup Instructions
-Prerequisites
-
-Python 3.8 or higher
-Google Colab account  or local GPU environment
-Google Drive account for data storage
-
-### Installation
-
-1. Google Colab 
-
-Upload the project files to your Google Colab environment
-Install dependencies:
-
-```
-python!pip install -r requirements.txt
-
-```
-
-2. Local Environment
-
-Clone or extract the project files
-Create a virtual environment:
-
-```
-
-bashpython -m venv nlm_env
-source nlm_env/bin/activate  # On Windows: nlm_env\Scripts\activate
-
-```
-
-Install dependencies:
-
-```
-bashpip install -r requirements.txt
-```
----
-
-## Background
-
-Traditional NLP techniques—like Bag-of-Words, TF-IDF, or even word2vec—struggle with:
-- Out-of-vocabulary terms
-- Language-specific morphology
-- Stylistic nuances in authorial voice
-
-Subword-based approaches like **Byte-Pair Encoding (BPE)**, **WordPiece**, and **SentencePiece** address these issues by breaking words into smaller, meaningful units. When used with **transformer models** such as BERT and XLM-R, these techniques enhance both **semantic** and **syntactic** understanding, offering improved performance in nuanced NLP tasks.
+**semantic** and **syntactic** understanding, offering improved performance in nuanced NLP tasks.
 
 ---
 
@@ -108,8 +43,3 @@ We evaluate our models using:
 - **F1-Score** – Harmonic mean of precision and recall
 
 ---
-
-## Expected Contributions
-
-- Improved **authorship attribution** and **stylistic analysis** performance
-- Enhanced model **generalization across dialects**
